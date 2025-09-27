@@ -1,0 +1,20 @@
+Python
+
+pycache/
+*.pyc
+*.pyd
+*.pyo
+Ambientes Virtuais
+
+venv/
+env/
+.env
+Arquivos de Banco de Dados e Uploads Locais
+
+o2events.db
+static/files/
+Logs e arquivos de IDE
+
+*.log
+.vscode/
+.idea/

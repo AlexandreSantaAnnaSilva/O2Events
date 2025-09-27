@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block title %}Nova Nota Fiscal{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-7">
+            <div class="card shadow-lg border-0 rounded-4">
+                <div class="card-header bg-primary text-white rounded-top-4">
+                    <h3 class="mb-0 text-center"><i class="bi bi-receipt-cutoff me-2"></i> Cadastrar Nota Fiscal</h3>
+                </div>
+                <div class="card-body p-4">
+                    <!-- Importante: 'enctype="multipart/form-data"' é necessário para o upload de arquivos -->
+                    <form method="POST" action="{{ url_for('nova_nota') }}" enctype="multipart/form-data">
+                        
+                        <div class="mb-3">
+                            <label for="evento_id" class="form-label fw-bold">Associar ao Evento</label>
+                            <select class="form-select form-select-lg rounded-3" id="evento_id" name="evento_id" required>
+                                <option value="">Selecione um Evento</option>
+                                {% for evento in eventos %}
+                                    <option value="{{ evento.id }}">{{ evento.nome }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="descricao" class="form-label fw-bold">Descrição da Compra</label>
+                            <input type="text" class="form-control rounded-3" id="descricao" name="descricao" 
+                                   placeholder='Ex: "Compra de frutas no mercado X"' required maxlength="200">
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="valor" class="form-label fw-bold">Valor Total (R$)</label>
+                                <input type="text" class="form-control rounded-3" id="valor" name="valor" 
+                                       placeholder="Ex: 150.75" required pattern="[0-9]+([,\.][0-9]{1,2})?">
+                                <div class="form-text">Use ponto ou vírgula para centavos.</div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="quem_pagou" class="form-label fw-bold">Quem Pagou</label>
+                                <input type="text" class="form-control rounded-3" id="quem_pagou" name="quem_pagou" 
+                                       placeholder="Nome do pagador" required maxlength="100">
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="arquivo_nota" class="form-label fw-bold">Upload do Arquivo (PDF, Imagem)</label>
+                            <input class="form-control rounded-3" type="file" id="arquivo_nota" name="arquivo_nota" accept=".pdf, .png, .jpg, .jpeg, .gif">
+                            <div class="form-text">Opcional, mas recomendado para anexar a nota.</div>
+                        </div>
+                        
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary btn-lg rounded-3 fw-bold shadow-sm">
+                                <i class="bi bi-save-fill me-2"></i> Salvar Nota
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

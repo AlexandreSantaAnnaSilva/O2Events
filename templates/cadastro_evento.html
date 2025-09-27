@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}Novo Evento{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow-lg border-0 rounded-4">
+                <div class="card-header bg-success text-white rounded-top-4">
+                    <h3 class="mb-0 text-center"><i class="bi bi-calendar-event-fill me-2"></i> Cadastrar Novo Evento</h3>
+                </div>
+                <div class="card-body p-4">
+                    <p class="text-muted text-center">Organize suas despesas criando uma nova atividade ou evento.</p>
+                    
+                    <form method="POST" action="{{ url_for('novo_evento') }}">
+                        <div class="mb-3">
+                            <label for="nome_evento" class="form-label fw-bold">Nome do Evento</label>
+                            <input type="text" class="form-control form-control-lg rounded-3" id="nome_evento" name="nome_evento" 
+                                   placeholder='Ex: "Retiro de Jovens 2024", "Jantar de Páscoa"' required maxlength="100">
+                            <div class="form-text">O nome deve ser claro e descritivo.</div>
+                        </div>
+                        
+                        <div class="d-grid gap-2 mt-4">
+                            <button type="submit" class="btn btn-success btn-lg rounded-3 fw-bold shadow-sm">
+                                <i class="bi bi-plus-circle-fill me-2"></i> Criar Evento
+                            </button>
+                            <a href="{{ url_for('homepage') }}" class="btn btn-outline-secondary rounded-3">
+                                Cancelar e Voltar
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
