@@ -1,78 +1,119 @@
 {% extends "base.html" %}
 
-{% block title %}Dashboard Principal{% endblock %}
+{% block title %}Dashboard de Eventos{% endblock %}
 
 {% block content %}
+
 <header class="text-center py-4 bg-white rounded-4 shadow-sm mb-4">
-    <h1 class="display-6 fw-light text-success"><i class="bi bi-speedometer2 me-2"></i> Painel de Contabilidade de Eventos</h1>
-    <p class="lead text-muted">Visualize o resumo dos eventos e despesas para exportação.</p>
+<h1 class="display-6 fw-light text-success"><i class="bi bi-speedometer2 me-2"></i> Painel de Contabilidade de Eventos</h1>
+<p class="lead text-muted">Visualize o resumo dos eventos e despesas para exportação.</p>
 </header>
 
 {% if eventos_com_resumo %}
-    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-        {% for item in eventos_com_resumo %}
-            <div class="col">
-                <div class="card h-100 rounded-4 shadow-lg border-start border-5 border-success">
-                    <div class="card-body">
-                        <h5 class="card-title text-success fw-bold">{{ item.evento.nome }}</h5>
-                        <h6 class="card-subtitle mb-2 text-muted">ID: #{{ item.evento.id }}</h6>
-                        
-                        <hr>
-                        
-                        <p class="card-text">
-                            <span class="fw-bold">Total Gasto:</span> 
-                            <!-- Formatação para Real Brasileiro -->
-                            <span class="badge bg-danger fs-6">R$ {{ "%.2f"|format(item.total_gasto) }}</span>
-                        </p>
-                        
-                        <p class="card-text mt-3">
-                            <span class="fw-bold">Notas Cadastradas:</span> {{ item.evento.notas|length }}
-                        </p>
+<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+{% for item in eventos_com_resumo %}
+<div class="col">
+<div class="card h-100 rounded-4 shadow-lg border-start border-5 border-success">
+<div class="card-body">
+<h5 class="card-title text-success fw-bold">{{ item.evento.nome }}</h5>
+<h6 class="card-subtitle mb-2 text-muted">ID: #{{ item.evento.id }}</h6>
 
-                        <!-- Acordeão para o Resumo por Pagador -->
-                        <div class="accordion accordion-flush" id="accordion_{{ item.evento.id }}">
-                            <div class="accordion-item border-0">
-                                <h2 class="accordion-header" id="headingSummary_{{ item.evento.id }}">
-                                    <button class="accordion-button collapsed fw-bold p-2" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSummary_{{ item.evento.id }}" aria-expanded="false" aria-controls="collapseSummary_{{ item.evento.id }}">
-                                        Resumo por Quem Pagou
-                                    </button>
-                                </h2>
-                                <div id="collapseSummary_{{ item.evento.id }}" class="accordion-collapse collapse" aria-labelledby="headingSummary_{{ item.evento.id }}" data-bs-parent="#accordion_{{ item.evento.id }}">
-                                    <div class="accordion-body p-2">
-                                        <ul class="list-group list-group-flush">
-                                            {% for pagador, valor in item.quem_pagou_resumo %}
-                                                <li class="list-group-item d-flex justify-content-between align-items-center p-1 px-2">
-                                                    {{ pagador }}
-                                                    <span class="badge bg-info text-dark">R$ {{ "%.2f"|format(valor) }}</span>
-                                                </li>
-                                            {% endfor %}
-                                        </ul>
-                                    </div>
+                    <hr>
+                    
+                    <p class="card-text">
+                        <span class="fw-bold">Total Gasto:</span> 
+                        <!-- Formatação para Real Brasileiro -->
+                        <span class="badge bg-danger fs-6">R$ {{ "%.2f"|format(item.total_gasto) }}</span>
+                    </p>
+                    
+                    <p class="card-text mt-3">
+                        <span class="fw-bold">Notas Cadastradas:</span> {{ item.evento.notas|length }}
+                    </p>
+
+                    <!-- Acordeão para o Resumo por Pagador -->
+                    <div class="accordion accordion-flush" id="accordion_{{ item.evento.id }}">
+                        <div class="accordion-item border-0">
+                            <h2 class="accordion-header" id="headingSummary_{{ item.evento.id }}">
+                                <button class="accordion-button collapsed fw-bold p-2" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSummary_{{ item.evento.id }}" aria-expanded="false" aria-controls="collapseSummary_{{ item.evento.id }}">
+                                    Resumo por Quem Pagou
+                                </button>
+                            </h2>
+                            <div id="collapseSummary_{{ item.evento.id }}" class="accordion-collapse collapse" aria-labelledby="headingSummary_{{ item.evento.id }}" data-bs-parent="#accordion_{{ item.evento.id }}">
+                                <div class="accordion-body p-2">
+                                    <ul class="list-group list-group-flush">
+                                        {% for pagador, valor in item.quem_pagou_resumo %}
+                                            <li class="list-group-item d-flex justify-content-between align-items-center p-1 px-2">
+                                                {{ pagador }}
+                                                <span class="badge bg-info text-dark">R$ {{ "%.2f"|format(valor) }}</span>
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
                                 </div>
                             </div>
                         </div>
-                        
-                        <div class="d-grid mt-3">
-                            <!-- TODO: Implementar rota de detalhes/exportação -->
-                            <button class="btn btn-outline-dark btn-sm rounded-pill fw-bold" disabled>
-                                Ver Detalhes/Exportar (Em Breve)
-                            </button>
-                        </div>
-                        
                     </div>
+
+                    <!-- NOVO BLOCO: Acordeão para Notas Fiscais e Links de Download -->
+                    <div class="accordion accordion-flush mt-3" id="accordionNotes_{{ item.evento.id }}">
+                        <div class="accordion-item border-0">
+                            <h2 class="accordion-header" id="headingNotes_{{ item.evento.id }}">
+                                <button class="accordion-button collapsed fw-bold p-2 text-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseNotes_{{ item.evento.id }}" aria-expanded="false" aria-controls="collapseNotes_{{ item.evento.id }}">
+                                    <i class="bi bi-file-earmark-arrow-down-fill me-2"></i> Ver/Baixar Notas Fiscais
+                                </button>
+                            </h2>
+                            <div id="collapseNotes_{{ item.evento.id }}" class="accordion-collapse collapse" aria-labelledby="headingNotes_{{ item.evento.id }}" data-bs-parent="#accordionNotes_{{ item.evento.id }}">
+                                <div class="accordion-body p-2">
+                                    {% if item.evento.notas %}
+                                        <ul class="list-group list-group-flush">
+                                            {% for nota in item.evento.notas %}
+                                                <li class="list-group-item d-flex justify-content-between align-items-center p-1 px-2">
+                                                    <span class="text-truncate me-2" title="{{ nota.descricao }}">
+                                                        {{ nota.descricao }}
+                                                    </span>
+                                                    
+                                                    {% if nota.caminho_arquivo %}
+                                                        <!-- LINK DE DOWNLOAD USANDO A ROTA /files/<filename> -->
+                                                        <a href="{{ url_for('uploaded_file', filename=nota.caminho_arquivo.split('/')[-1]) }}" 
+                                                           class="btn btn-outline-primary btn-sm rounded-pill py-0"
+                                                           title="Baixar Arquivo">
+                                                            <i class="bi bi-download"></i> R$ {{ "%.2f"|format(nota.valor) }}
+                                                        </a>
+                                                    {% else %}
+                                                        <span class="badge bg-light text-dark">R$ {{ "%.2f"|format(nota.valor) }}</span>
+                                                    {% endif %}
+                                                </li>
+                                            {% endfor %}
+                                        </ul>
+                                    {% else %}
+                                        <div class="alert alert-warning p-2 mb-0">Nenhuma nota cadastrada.</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- FIM NOVO BLOCO -->
+                    
+                    <div class="d-grid mt-3">
+                        <!-- TODO: Implementar rota de detalhes/exportação -->
+                        <button class="btn btn-outline-dark btn-sm rounded-pill fw-bold" disabled>
+                            Ver Detalhes/Exportar (Em Breve)
+                        </button>
+                    </div>
+                    
                 </div>
             </div>
-        {% endfor %}
-    </div>
+        </div>
+    {% endfor %}
+</div>
 
 {% else %}
-    <div class="alert alert-info text-center p-5 rounded-4 shadow-sm">
-        <h4 class="alert-heading"><i class="bi bi-info-circle-fill me-2"></i> Nenhum Evento Cadastrado</h4>
-        <p>Comece a organizar suas finanças criando o primeiro evento!</p>
-        <hr>
-        <a href="{{ url_for('novo_evento') }}" class="btn btn-success btn-lg rounded-pill fw-bold">
-            <i class="bi bi-calendar-plus-fill me-2"></i> Criar Primeiro Evento Agora
-        </a>
-    </div>
+<div class="alert alert-info text-center p-5 rounded-4 shadow-sm">
+<h4 class="alert-heading"><i class="bi bi-info-circle-fill me-2"></i> Nenhum Evento Cadastrado</h4>
+<p>Comece a organizar suas finanças criando o primeiro evento!</p>
+<hr>
+<a href="{{ url_for('novo_evento') }}" class="btn btn-success btn-lg rounded-pill fw-bold">
+<i class="bi bi-calendar-plus-fill me-2"></i> Criar Primeiro Evento Agora
+</a>
+</div>
 {% endif %}
 {% endblock %}
