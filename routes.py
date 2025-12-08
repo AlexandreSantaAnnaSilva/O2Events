@@ -5,6 +5,7 @@ from models import Evento, NotaFiscal
 from flask import render_template, request, redirect, url_for, flash, send_from_directory
 from werkzeug.utils import secure_filename
 from werkzeug.exceptions import NotFound 
+from datetime import date , datetime
 
 
 def allowed_file(filename):
@@ -18,7 +19,8 @@ def homepage():
     """Exibe a lista de eventos e o dashboard de resumo."""
 
     # 1. Busca todos os eventos ( return uma lista de objetos Evento)
-    todos_eventos = Evento.query.all()
+    # ORDENAÇAO = Ordena todos os eventos por data_evento (caso exista) para melhro visualização
+    todos_eventos = Evento.query.order_by(Evento.data_evento.asc(), Evento.id.asc()).all()
 
     eventos_com_resumo =[]
 
@@ -50,14 +52,23 @@ def novo_evento():
     """Exibe o formulário de cadastro de evento e processa a submissão."""
     if request.method == 'POST':
         nome_evento = request.form.get('nome_evento').strip()
+        data_evento_str = request.form.get('data_evento')
+        data_evento_obj = None
         
         if not nome_evento:
             flash('O nome do evento não pode ser vazio.', 'warning')
             return redirect(url_for('novo_evento'))
+
+        if data_evento_str:
+            try:
+                data_evento_obj = datetime.strptime(data_evento_str, '%Y-%m-%d')
+            except ValueError:
+                flash('Formato de data inválido. Use AAAA-MM-DD.', 'danger')
+                return redirect(url_for('novo_evento'))
             
         try:
             # Salvar os dados no banco de dados
-            novo = Evento(nome=nome_evento)
+            novo = Evento(nome=nome_evento , data_evento = data_evento_obj)
             db.session.add(novo)
             db.session.commit()
             flash(f'Evento "{nome_evento}" criado com sucesso!', 'success')

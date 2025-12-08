@@ -3,23 +3,39 @@
 {% block title %}Dashboard de Eventos{% endblock %}
 
 {% block content %}
+<div class="container mt-5">
 
 <header class="text-center py-4 bg-white rounded-4 shadow-sm mb-4">
-<h1 class="display-6 fw-light text-success"><i class="bi bi-speedometer2 me-2"></i> Painel de Contabilidade de Eventos</h1>
-<p class="lead text-muted">Visualize o resumo dos eventos e despesas para exportação.</p>
+    <h1 class="display-6 fw-light text-success"><i class="bi bi-speedometer2 me-2"></i> Painel de Contabilidade de Eventos</h1>
+    <p class="lead text-muted">Visualize o resumo dos eventos e despesas para exportação.</p>
+    <div class = "mt-3">
+        <a href="{{ url_for('novo_evento') }}" class="btn btn-success btn-lg rounded-3">
+            <i class="bi bi-plus-circle me-2"></i> Novo Evento
+        </a>
+        <a href="{{ url_for('nova_nota') }}" class="btn btn-primary btn-lg rounded-3">
+            <i class="bi bi-receipt me-1"></i> Nova Nota Fiscal
+        </a>
+    </div>
 </header>
 
 {% if eventos_com_resumo %}
 <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
 {% for item in eventos_com_resumo %}
 <div class="col">
-<div class="card h-100 rounded-4 shadow-lg border-start border-5 border-success">
-<div class="card-body">
-<h5 class="card-title text-success fw-bold">{{ item.evento.nome }}</h5>
-<h6 class="card-subtitle mb-2 text-muted">ID: #{{ item.evento.id }}</h6>
-
+    <div class="card h-100 rounded-4 shadow-lg border-start border-5 border-success">
+        <div class="card-body">
+            <h5 class="card-title text-success fw-bold">{{ item.evento.nome }}</h5>
+            <h6 class="card-subtitle mb-2 text-muted">ID: #{{ item.evento.id }}</h6>
+            {% if item.evento.data_evento %}
+            <p class="card-text mb-2">
+                <span class="fw-bold"><i class="bi bi-calendar me-1"></i> Data do Prevista:</span>
+                <span class="badge bg-info text-dark">{{ item.evento.data_evento.strftime('%d/%m/%Y') }}</span>
+            </p>
+            {% else %}
+            <p class="card-text mb-2 text-muted fst-italic"><i class="bi bi-calendar-x me-1"></i> Data não definida</p>
+            {% endif %}  
                     <hr>
-                    
+                     
                     <p class="card-text">
                         <span class="fw-bold">Total Gasto:</span> 
                         <!-- Formatação para Real Brasileiro -->
@@ -106,14 +122,15 @@
     {% endfor %}
 </div>
 
-{% else %}
-<div class="alert alert-info text-center p-5 rounded-4 shadow-sm">
-<h4 class="alert-heading"><i class="bi bi-info-circle-fill me-2"></i> Nenhum Evento Cadastrado</h4>
-<p>Comece a organizar suas finanças criando o primeiro evento!</p>
-<hr>
-<a href="{{ url_for('novo_evento') }}" class="btn btn-success btn-lg rounded-pill fw-bold">
-<i class="bi bi-calendar-plus-fill me-2"></i> Criar Primeiro Evento Agora
-</a>
+    {% else %}
+    <div class="alert alert-info text-center p-5 rounded-4 shadow-sm">
+        <h4 class="alert-heading"><i class="bi bi-info-circle-fill me-2"></i> Nenhum Evento Cadastrado</h4>
+        <p>Comece a organizar suas finanças criando o primeiro evento!</p>
+        <hr>
+        <a href="{{ url_for('novo_evento') }}" class="btn btn-success btn-lg rounded-pill fw-bold">
+            <i class="bi bi-calendar-plus-fill me-2"></i> Criar Primeiro Evento Agora
+        </a>
+    </div>
+    {% endif %}
 </div>
-{% endif %}
 {% endblock %}
