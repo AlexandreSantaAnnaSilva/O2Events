@@ -4,6 +4,12 @@
   <img src="https://skillicons.dev/icons?i=python,flask,html,css,bootstrap,git,github,sqlite" />
 </p>
 
+
+<p align="center">
+  <a href="README.md">🇧🇷 Portuguese</a> •
+  <a href="README.en.md">🇺🇸 English</a>
+</p>
+
 ## 🌟 Visão Geral
 
 O O2Events é uma aplicação web construída com Flask e SQLAlchemy, desenvolvida para ajudar na organização e contabilização de despesas relacionadas a eventos, encontros ou atividades em grupo. Ele permite o cadastro de eventos, o registro de notas fiscais com valores e responsáveis pelo pagamento, e o resumo total dos gastos.
