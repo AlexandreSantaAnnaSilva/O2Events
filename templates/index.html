@@ -3,7 +3,7 @@
 {% block title %}Dashboard de Eventos{% endblock %}
 
 {% block content %}
-<div class="container mt-5">
+<div class="container mt-5 mb-5">
 
 {% if eventos_com_resumo %}
 <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
@@ -30,7 +30,8 @@
                     </p>
                     
                     <p class="card-text mt-3">
-                        <span class="fw-bold">Notas Cadastradas:</span> {{ item.evento.notas|length }}
+                        <span class="fw-bold">Notas Cadastradas:</span> 
+                        {{ item.evento.notas.count() }}
                     </p>
 
                     <!-- Acordeão para o Resumo por Pagador -->
@@ -68,7 +69,7 @@
                                 <div class="accordion-body p-2">
                                     {% if item.evento.notas %}
                                         <ul class="list-group list-group-flush">
-                                            {% for nota in item.evento.notas %}
+                                            {% for nota in item.evento.notas.all() %}
                                                 <li class="list-group-item d-flex justify-content-between align-items-center p-1 px-2">
                                                     <span class="text-truncate me-2" title="{{ nota.descricao }}">
                                                         {{ nota.descricao }}
@@ -97,10 +98,10 @@
                     <!-- FIM NOVO BLOCO -->
                     
                     <div class="d-grid mt-3">
-                        <!-- TODO: Implementar rota de detalhes/exportação -->
-                        <button class="btn btn-outline-dark btn-sm rounded-pill fw-bold" disabled>
-                            Ver Detalhes/Exportar (Em Breve)
-                        </button>
+                        <a href="{{ url_for('detalhes_evento', evento_id=item.evento.id) }}" 
+                            class="btn btn-success btn-sm rounded-3 fw-bold">
+                            <i class="bi bi-eye-fill me-2"></i> Ver Detalhes do Evento
+                        </a>
                     </div>
                     
                 </div>
